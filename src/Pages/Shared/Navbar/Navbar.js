@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../../../assets/images/Logo-1.png'
 
 const Navbar = () => {
 
@@ -10,9 +11,10 @@ const Navbar = () => {
     </React.Fragment>
 
     return (
-        <div className="navbar bg-emerald-400">
+        <div className="navbar bg-orange-200 h-28">
             <div className="flex-1">
-                <Link to='/' className="btn btn-ghost normal-case text-xl">Din Social Media</Link>
+                
+                <Link to='/' className="normal-case text-xl"><img className='w-36 h-28 ml-10' src={logo} alt="" srcset="" /></Link>
             </div>
             <div className="navbar-start hidden lg:flex">
                 <ul className="menu menu-horizontal p-0">

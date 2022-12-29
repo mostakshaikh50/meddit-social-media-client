@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import {getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile} from 'firebase/auth';
+import {getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile, signInWithPopup} from 'firebase/auth';
 import app from '../../firebase/firebase.config'
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../../Pages/Shared/Loading/Loading';
@@ -25,6 +25,10 @@ const AuthProvider = ({children}) => {
         return updateProfile(auth.currentUser, userInfo);
     }
 
+    const providerLogin = (provider) => {
+        setLoading(true);
+        return signInWithPopup(auth, provider);
+    }
     const logOut = () =>{
         setLoading(true);
         return signOut(auth);
@@ -65,7 +69,8 @@ const AuthProvider = ({children}) => {
         loginUser,
         userData,
         refetch,
-        logOut
+        logOut,
+        providerLogin
 
     }
     return (

@@ -1,13 +1,16 @@
 import React, { useContext } from 'react';
+import { FaGoogle } from "react-icons/fa";
 import { toast } from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 import './Login.css'
+import { GoogleAuthProvider } from 'firebase/auth';
 
 
 const Login = () => {
-    const { loginUser } = useContext(AuthContext);
+    const { loginUser, providerLogin } = useContext(AuthContext);
+    const googleProvider = new GoogleAuthProvider();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -17,7 +20,7 @@ const Login = () => {
         event.preventDefault();
 
         const form = event.target;
-        
+
         const email = form.email.value;
         const password = form.password.value;
 
@@ -32,6 +35,20 @@ const Login = () => {
             })
             .catch(err => {
                 console.error(err.message)
+            })
+    }
+
+    const HandleGoogleSignIn = () => {
+        providerLogin(googleProvider)
+            .then(result => {
+                const user = result.user;
+                console.log("🚀 ~ file: Login.js:45 ~ HandleGoogleSignIn ~ user", user)
+                navigate(from, { replace: true });
+                toast.success('Successfully Logged In');
+            })
+
+            .catch(error => {
+                console.log(error.message)
             })
 
 
@@ -52,13 +69,16 @@ const Login = () => {
             <form onSubmit={handleLogin}>
                 <div className="loginContainer">
                     <div className="logindetail">
-                        <input type="text" name="email" placeholder="Email address or Phone Number" />
+                        <input type="text" name="email" placeholder="Email or Phone Number" />
                         <br></br>
                         <input type="Password" name="password" placeholder="Password" />
                         <br></br>
                         <button className="btn-login">
                             <Link to="/">LogIn</Link>
                         </button>
+                        <div className='mt-5'>
+                            <button onClick={HandleGoogleSignIn} className="btn w-full px-8 py-3 font-semibold rounded-md bg-blue-500 text-gray-50">SignIn With Google <span className='text-red-400 ml-4'><FaGoogle></FaGoogle></span> </button>
+                        </div>
                     </div>
                     {/* <div className="forget">
                     <a href="forget">Forgotten account?</a>

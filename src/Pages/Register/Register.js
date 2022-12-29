@@ -1,16 +1,20 @@
 import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { FaGoogle } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import { GoogleAuthProvider } from 'firebase/auth';
 
 const Register = () => {
 
     const imageHostKey = "f68ce6832ff6fff2293396eec75259d1";
-    const { createUser, updateUser } = useContext(AuthContext);
+    const { createUser, updateUser, providerLogin } = useContext(AuthContext);
+    const googleProvider = new GoogleAuthProvider();
     const navigate = useNavigate();
+    const location = useLocation();
 
+    const from = location.state?.from?.pathname || '/';
 
     const handleSignup = e => {
         e.preventDefault();
@@ -86,10 +90,50 @@ const Register = () => {
                 });
 
 
-        }
+        }        
 
     }
 
+    const saveUser = (name, email) => {
+
+        axios.post(`http://localhost:5000/users`, {
+            name: name,
+            email: email,
+        })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+
+    }
+
+    const HandleGoogleSignIn = ({ name, email }) => {
+        providerLogin(googleProvider)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+                navigate('/')
+                toast.success('User Created Successfully')
+                const userInfo = {
+                    email: user.email,
+                    name: user.displayName,
+                }
+                updateUser(userInfo)
+                    .then(() => {
+                        saveUser(name = user.displayName, email = user.email);
+                    })
+                    .catch(err => console.log(err));
+            })
+            .catch(error => {
+                console.log(error)
+            });
+
+
+
+    }
 
     return (
         <div className="m-auto 
@@ -132,7 +176,7 @@ const Register = () => {
                         <button type="submit" className="w-full px-8 py-3 font-semibold rounded-md bg-orange-500 text-gray-50">Sign Up</button>
                     </div>
                     <div className='mt-5'>
-                        <button onClick="" className="btn w-full px-8 py-3 font-semibold rounded-md bg-blue-500 text-gray-50">SignIn With Google <span className='text-red-400 ml-4'><FaGoogle></FaGoogle></span> </button>
+                        <button onClick={HandleGoogleSignIn} className="btn w-full px-8 py-3 font-semibold rounded-md bg-blue-500 text-gray-50">SignIn With Google <span className='text-red-400 ml-4'><FaGoogle></FaGoogle></span> </button>
                     </div>
                     <p className="px-6 text-sm text-center text-gray-600">Already Medditor ?
                         <Link to="/login" rel="noopener noreferrer" href="#" className="hover:underline text-sky-600"> Sign In</Link>

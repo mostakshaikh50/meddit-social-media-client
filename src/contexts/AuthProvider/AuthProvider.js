@@ -1,6 +1,8 @@
 import React, { createContext, useEffect, useState } from 'react';
-import {getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut} from 'firebase/auth';
+import {getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile} from 'firebase/auth';
 import app from '../../firebase/firebase.config'
+import { useQuery } from '@tanstack/react-query';
+import Loading from '../../Pages/Shared/Loading/Loading';
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -19,7 +21,12 @@ const AuthProvider = ({children}) => {
         return signInWithEmailAndPassword(auth, email, password);
     }
 
+    const updateUser = (userInfo) => {
+        return updateProfile(auth.currentUser, userInfo);
+    }
+
     const logOut = () =>{
+        setLoading(true);
         return signOut(auth);
     }
 
@@ -35,12 +42,29 @@ const AuthProvider = ({children}) => {
       }
     } , [])
 
+    const { data: userData = [], isLoading, refetch } = useQuery({
+        queryKey: ['userData'],
+        queryFn: async () => {
+            const res = await fetch(`http://localhost:5000/user?email=${user?.email}`)
+            const data = await res.json()
+            return data
+        }
+    })
+
+    if (isLoading) {
+        return <Loading></Loading>;
+    }
+
+
 
     const authInfo ={
         user,
         loading,
         createUser,
+        updateUser,
         loginUser,
+        userData,
+        refetch,
         logOut
 
     }

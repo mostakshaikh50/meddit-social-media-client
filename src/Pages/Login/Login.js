@@ -1,8 +1,42 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { toast } from 'react-hot-toast';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
+
 import './Login.css'
 
+
 const Login = () => {
+    const { loginUser } = useContext(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const from = location.state?.from?.pathname || '/';
+
+    const handleLogin = event => {
+        event.preventDefault();
+
+        const form = event.target;
+        
+        const email = form.email.value;
+        const password = form.password.value;
+
+        loginUser(email, password)
+            .then(result => {
+                const user = result.user;
+                console.log(user)
+
+                navigate(from, { replace: true });
+                toast.success('User Logged in')
+
+            })
+            .catch(err => {
+                console.error(err.message)
+            })
+
+
+    }
+
     return (
 
         <div className="Login">
@@ -15,32 +49,35 @@ const Login = () => {
                     <br></br>with the people in your life.
                 </div>
             </div>
-            <div className="loginContainer">
-                <div className="logindetail">
-                    <input type="email" placeholder="Email address or Phone Number" />
-                    <br></br>
-                    <input type="Password" placeholder="Password" />
-                    <br></br>
-                    <button className="btn-login">
-                        <Link to="/HeaderArea">LogIn</Link>
-                    </button>
-                </div>
-                <div className="forget">
+            <form onSubmit={handleLogin}>
+                <div className="loginContainer">
+                    <div className="logindetail">
+                        <input type="text" name="email" placeholder="Email address or Phone Number" />
+                        <br></br>
+                        <input type="Password" name="password" placeholder="Password" />
+                        <br></br>
+                        <button className="btn-login">
+                            <Link to="/">LogIn</Link>
+                        </button>
+                    </div>
+                    {/* <div className="forget">
                     <a href="forget">Forgotten account?</a>
                     <br></br>
-                </div>
-                <div className="create">
+                </div> */}
+                    <div className="create">
+                        <br></br>
+                        <Link to="/register" className="btn-create-new">
+                            Create New Account
+                        </Link>
+                    </div>
+                    <p></p>
                     <br></br>
-                    <button className="btn-create-new">
-                        Create New Account
-                    </button>
-                </div>
-                <p></p>
-                <br></br>
-                <div className="page">
+                    {/* <div className="page">
                     <a href="createpage">Create a Page </a> for a celebrity, band or business.
+                </div> */}
                 </div>
-            </div>
+            </form>
+
 
         </div>
 

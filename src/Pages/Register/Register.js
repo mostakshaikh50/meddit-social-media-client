@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaGoogle } from "react-icons/fa";
 
 const Register = () => {
     return (
@@ -30,8 +31,11 @@ const Register = () => {
                     <div>
                         <button type="button" className="w-full px-8 py-3 font-semibold rounded-md bg-orange-500 text-gray-50">Sign Up</button>
                     </div>
+                    <div className='mt-5'>
+                        <button onClick="" className="btn w-full px-8 py-3 font-semibold rounded-md bg-blue-500 text-gray-50">SignIn With Google <span className='text-red-400 ml-4'><FaGoogle></FaGoogle></span> </button>
+                    </div>
                     <p className="px-6 text-sm text-center text-gray-600">Already Medditor ?
-                        <Link rel="noopener noreferrer" href="#" className="hover:underline text-sky-600"> Sign In</Link>.
+                        <Link to="/login" rel="noopener noreferrer" href="#" className="hover:underline text-sky-600"> Sign In</Link>.
                     </p>
                 </div>
             </form>

@@ -27,8 +27,8 @@ body{
   .loginContainer{
     border: white .3rem solid;
     background-color: white;
-    height: 24rem;
-    width: 26rem;
+    height: 23rem;
+    width: 25rem;
     padding: 1rem;
     border-radius: .7rem;
   }

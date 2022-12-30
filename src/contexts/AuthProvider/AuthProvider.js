@@ -49,9 +49,9 @@ const AuthProvider = ({children}) => {
     const { data: userData = [], isLoading, refetch } = useQuery({
         queryKey: ['userData'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/user?email=${user?.email}`)
-            const data = await res.json()
-            return data
+            const res = await fetch(`http://localhost:5000/user?email=${user?.email}`);
+            const data = await res.json();
+            return data;
         }
     })
 

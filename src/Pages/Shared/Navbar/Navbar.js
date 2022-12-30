@@ -1,19 +1,31 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import logo from '../../../assets/images/Logo-1.png'
+import { AuthContext } from '../../../contexts/AuthProvider/AuthProvider';
 
 const Navbar = () => {
 
+    const { user, logOut, userData, isLoading } = useContext(AuthContext);
+    console.log(user);
+    const handleLogOut = () => {
+        logOut()
+            .then(() => { })
+        Navigate('/')
+            .catch(err => console.error(err))
+    }
+
     const menuItems = <React.Fragment>
-        <li><Link to="">Media</Link></li>
+
+        <li><Link to="/media">Media</Link></li>
         <li><Link to="/message">Message</Link></li>
-        <li><Link to="">About</Link></li>
+        <li><Link to="/about">About</Link></li>
+
     </React.Fragment>
 
     return (
         <div className="navbar bg-orange-200 h-28">
             <div className="flex-1">
-                
+
                 <Link to='/' className="normal-case text-xl"><img className='w-36 h-28 ml-10' src={logo} alt="" srcset="" /></Link>
             </div>
             <div className="navbar-start hidden lg:flex">
@@ -34,20 +46,44 @@ const Navbar = () => {
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
-                            <img alt='' src="https://placeimg.com/80/80/people" />
+                            {user?.photoURL?
+                              <>
+                                <img alt='' src={user?.photoURL} />
+                              </>
+                              :
+                              <>
+                              <img alt='' src="https://placeimg.com/80/80/people"  />
+                              </>
+                            }
+                            
                         </div>
                     </label>
                     <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                        <li>
+                        {/* <li>
                             <Link className="justify-between">
                                 Profile
                                 <span className="badge">New</span>
                             </Link>
                         </li>
-                        <li><Link>Settings</Link></li>
-                        <li><Link to='/login'>Login</Link></li>
-                        <li><Link to='/register'>Register</Link></li>
-                        <li><Link>Logout</Link></li>
+                        <li><Link>Settings</Link></li> */}
+                        {user?.email ?
+                            <>
+                                <li>
+                                    <Link className="justify-between">
+                                        Profile
+                                        <span className="badge">New</span>
+                                    </Link>
+                                </li>
+                                <li><Link onClick={handleLogOut}>Logout</Link></li>
+                            </>
+                            :
+                            <>
+                                <li><Link to='/login'>Login</Link></li>
+                                <li><Link to='/register'>Register</Link></li>
+                            </>
+                        }
+
+
                     </ul>
                 </div>
             </div>

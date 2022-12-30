@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useContext } from 'react';
 import { toast } from 'react-hot-toast';
 import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
+import SortedPost from './SortedPost/SortedPost';
 
 
 
@@ -86,7 +87,9 @@ const Home = () => {
                     </div>
                 </form>)
             }
+            <SortedPost></SortedPost>
         </div>
+        
     );
 };
 
